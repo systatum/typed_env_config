@@ -41,6 +41,8 @@ module TypedEnvConfig
           Int32.new(val.to_s)
         {% elsif decl.type.stringify == "Int64" %}
           Int64.new(val.to_s)
+        {% elsif decl.type.stringify == "Float32" %}
+          Float32.new(val.to_s)
         {% else %}
           val.as({{ decl.type }})
         {% end %}

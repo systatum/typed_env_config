@@ -5,6 +5,7 @@ class AppSettings
 
   field small_number : Int32, default: 0
   field big_number : Int64, default: 0
+  field small_decimal : Float32, default: 0.0
   field outwardly_inherited : Bool, default: false
   field ligo_app_cors_whitelist : String, default: ""
   field ligo_undefined_key : String, default: "undefined"
@@ -84,6 +85,24 @@ describe TypedEnvConfig do
 
       dev_config.big_number.should eq(9223372036854775807)
       prod_config.big_number.should eq(-9223372036854775808)
+    end
+
+    it "parses Float32 values correctly as per environment" do
+      yaml_content = <<-YAML
+        development:
+          small_decimal: 3.402823466385288598117041e+38
+        production:
+          small_decimal: -3.402823466385288598117041e+38
+      YAML
+      parsed_content = YAML.parse(yaml_content)
+
+      dev_config = AppSettings.new
+      dev_config.load_from_yaml(parsed_content, "development")
+      prod_config = AppSettings.new
+      prod_config.load_from_yaml(parsed_content, "production")
+
+      dev_config.small_decimal.should eq(3.402823466385288598117041e+38)
+      prod_config.small_decimal.should eq(-3.402823466385288598117041e+38)
     end
   end
 
