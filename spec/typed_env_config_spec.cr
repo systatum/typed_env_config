@@ -4,6 +4,7 @@ class AppSettings
   include TypedEnvConfig
 
   field small_number : Int32, default: 0
+  field big_number : Int64, default: 0
   field outwardly_inherited : Bool, default: false
   field ligo_app_cors_whitelist : String, default: ""
   field ligo_undefined_key : String, default: "undefined"
@@ -65,6 +66,24 @@ describe TypedEnvConfig do
 
       dev_config.small_number.should eq(2147483647)
       prod_config.small_number.should eq(-2147483648)
+    end
+
+    it "parses Int64 values correctly as per environment" do
+      yaml_content = <<-YAML
+        development:
+          big_number: 9223372036854775807
+        production:
+          big_number: -9223372036854775808
+      YAML
+      parsed_content = YAML.parse(yaml_content)
+
+      dev_config = AppSettings.new
+      dev_config.load_from_yaml(parsed_content, "development")
+      prod_config = AppSettings.new
+      prod_config.load_from_yaml(parsed_content, "production")
+
+      dev_config.big_number.should eq(9223372036854775807)
+      prod_config.big_number.should eq(-9223372036854775808)
     end
   end
 
