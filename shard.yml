@@ -1,0 +1,12 @@
+name: typed_env_config
+version: 0.1.0
+
+authors:
+  - Adam Hakarsa <adb819@g.harvard.edu>
+
+description: |
+  A Crystal library for loading environment configurations/variables with type safety.
+
+crystal: ~> 1.0
+
+license: MIT

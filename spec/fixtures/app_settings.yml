@@ -1,0 +1,23 @@
+default: &default
+  outwardly_inherited: true
+
+  ligo:
+    app: &ligo_app
+      cors_whitelist: "*"
+      deeply_inherited: true
+
+
+production:
+  <<: *default
+
+  ligo:
+    app:
+      <<: *ligo_app
+      cors_whitelist: "https://systatum.com"
+
+development:
+  <<: *default
+
+  ligo:
+    app:
+      <<: *ligo_app
