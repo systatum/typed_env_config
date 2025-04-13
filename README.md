@@ -1,6 +1,6 @@
 # typed_env_config
 
-![ci badge](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?event=push)
+[![CI](https://github.com/systatum/typed_env_config/actions/workflows/ci.yml/badge.svg)](https://github.com/systatum/typed_env_config/actions/workflows/ci.yml)
 
 `typed_env_config` is a Crystal library for loading environment configurations/variables with type safety.
 We do so without cluttering the `ENV` variable.
