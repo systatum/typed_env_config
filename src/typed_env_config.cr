@@ -30,8 +30,18 @@ module TypedEnvConfig
     # test
     def {{ decl.var }} : {{ decl.type }}
       key = {{ decl.var.stringify }}
+
       if @values.has_key?(key)
-        @values[key].as({{ decl.type }})
+        val = @values[key]
+        {% if decl.type.stringify == "Bool" %}
+          val == "true" || val == "True" || val == "TRUE" ||
+          val == "y" || val == "Y" || val == "yes" || val == "Yes" || val == "YES" ||
+          val == "on" || val == "On" || val == "ON"
+        {% elsif decl.type == String %}
+          val.as({{ decl.type }})
+        {% else %}
+          val.as({{ decl.type }})
+        {% end %}
       else
         @@default_values[key].as({{ decl.type }})
       end
@@ -48,7 +58,7 @@ module TypedEnvConfig
       if File.exists?(yml_path)
         content = File.read(yml_path)
         parsed_content = YAML.parse(content)
-        config.load_from_yaml(parsed_content[environment])
+        config.load_from_yaml(parsed_content, environment)
       else
         raise LoadError.new("Cannot load configuration file: #{file}; file doesn't exist")
       end
@@ -59,12 +69,16 @@ module TypedEnvConfig
     end
   end
 
-  def load_from_yaml(yaml : YAML::Any, prefix = "")
+  def load_from_yaml(yaml : YAML::Any, environment : String)
+    assign_values_from_yaml(yaml[environment], "")
+  end
+
+  private def assign_values_from_yaml(yaml : YAML::Any, prefix = "")
     case raw = yaml.raw
     when Hash
       raw.each do |key, value|
         env_key = "#{prefix}_#{key.to_s}".lchop("_")
-        load_from_yaml(value, env_key)
+        assign_values_from_yaml(value, env_key)
       end
     else
       unless prefix.empty?

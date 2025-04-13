@@ -18,6 +18,8 @@ production:
 development:
   <<: *default
 
+  outwardly_inherited: false
+
   ligo:
     app:
       <<: *ligo_app
