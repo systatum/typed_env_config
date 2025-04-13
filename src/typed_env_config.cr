@@ -11,8 +11,8 @@ module TypedEnvConfig
   class KeyError < Exception
   end
 
-  @values = Hash(String, Nil | Bool | Float32 | Float64 | String).new
-  @@default_values = {} of String => Nil | Bool | Float32 | Float64 | String
+  @values = Hash(String, Nil | Bool | Float32 | Float64 | Int32 | String).new
+  @@default_values = {} of String => Nil | Bool | Float32 | Float64 | Int32 | String
 
   # define a field
   macro field(decl, default)
@@ -37,8 +37,8 @@ module TypedEnvConfig
           val == "true" || val == "True" || val == "TRUE" ||
           val == "y" || val == "Y" || val == "yes" || val == "Yes" || val == "YES" ||
           val == "on" || val == "On" || val == "ON"
-        {% elsif decl.type == String %}
-          val.as({{ decl.type }})
+        {% elsif decl.type.stringify == "Int32" %}
+          Int32.new(val.to_s)
         {% else %}
           val.as({{ decl.type }})
         {% end %}
