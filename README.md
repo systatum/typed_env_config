@@ -1,5 +1,7 @@
 # typed_env_config
 
+![ci badge](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?event=push)
+
 `typed_env_config` is a Crystal library for loading environment configurations/variables with type safety.
 We do so without cluttering the `ENV` variable.
 
